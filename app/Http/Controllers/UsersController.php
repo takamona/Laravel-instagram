@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Profile;
 use Illuminate\Http\Request;
 
 class UsersController extends Controller
@@ -14,12 +15,10 @@ class UsersController extends Controller
      */
     public function index()
     {
-        
         // Userモデルを使って、全ユーザーデータを取得
         $users = User::all();
         // viewの呼び出し
         return view('users.index', compact('users'));
-
     }
 
     /**
@@ -30,7 +29,9 @@ class UsersController extends Controller
      */
     public function show(User $user)
     {
+        // 注目しているユーザのプロフィールデータ取得
+        $profile = $user->profile()->get()->first();
         // view の呼び出し
-        return view('users.show', compact('user'));
+        return view('users.show', compact('user', 'profile'));
     }
 }

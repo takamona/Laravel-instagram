@@ -26,4 +26,8 @@ h1 {
 /*スマホ　縦からは */
 @media screen and (max-width: 480px){
     
+.image_icon {
+    width: 100%;
+}
+
 }
