@@ -36,4 +36,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    
+    
+    // Profileモデルと1対1のリレーションを張る
+    public function profile()
+    {
+        // Profileモデルのデータを引っ張てくる
+        return $this->hasOne(Profile::class);
+    }
 }
