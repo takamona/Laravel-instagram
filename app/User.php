@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+    
     use Notifiable;
 
     /**
@@ -37,11 +38,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
     
-    
     // Profileモデルと1対1のリレーションを張る
     public function profile()
     {
         // Profileモデルのデータを引っ張てくる
         return $this->hasOne(Profile::class);
     }
+    
+    /**
+     * このユーザーが所有する投稿一覧（ Postモデルとの1対多の関係を定義）
+     */
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+    
 }
