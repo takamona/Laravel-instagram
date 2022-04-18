@@ -31,3 +31,12 @@ h1 {
 }
 
 }
+
+td img {
+    width: 200px;
+}
+
+
+.image_tile {
+    width: 100%;
+}
