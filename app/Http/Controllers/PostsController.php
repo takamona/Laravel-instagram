@@ -92,7 +92,10 @@ class PostsController extends Controller
      */
     public function show(Post $post)
     {
-        
+        // 空のCommentモデル作成
+        $comment = new Comment();
+        // 注目するコメントに紐づいたコメント一覧を取得
+        $comments = $post->comments()->get();
         // view の呼び出し
         return view('posts.show', compact('post'));
     }
