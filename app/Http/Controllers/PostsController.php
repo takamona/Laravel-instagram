@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Post;
+use App\Comment; // 追加
 use Illuminate\Http\Request;
 
 class PostsController extends Controller
@@ -14,8 +15,7 @@ class PostsController extends Controller
      */
     public function index()
     {
-    
-    // Postモデルを使って全投稿を取得
+        // Postモデルを使って全投稿を取得
         $posts = Post::orderBy('id', 'desc')->get();
         // ビューの呼び出し
         return view('top', compact('posts'));
@@ -28,7 +28,6 @@ class PostsController extends Controller
      */
     public function create()
     {
-        
         // 空のPostモデル作成
         $post = new Post();
         // view の呼び出し
@@ -43,8 +42,6 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        
-       
         // validation
         //for image ref) https://qiita.com/maejima_f/items/7691aa9385970ba7e3ed
         $this->validate($request, [
@@ -96,8 +93,9 @@ class PostsController extends Controller
         $comment = new Comment();
         // 注目するコメントに紐づいたコメント一覧を取得
         $comments = $post->comments()->get();
+        
         // view の呼び出し
-        return view('posts.show', compact('post'));
+        return view('posts.show', compact('post', 'comment', 'comments'));
     }
 
     /**
@@ -108,15 +106,12 @@ class PostsController extends Controller
      */
     public function edit(Post $post)
     {
-        
-        
-         // 注目している投稿がログインしている人のものならば
+        // 注目している投稿がログインしている人のものならば
         if($post->user->id === \Auth::id()){
             return view('posts.edit', compact('post'));
         }else{
             return redirect('/top');
         }
-        
     }
 
     /**
@@ -128,7 +123,6 @@ class PostsController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        
         // 注目している投稿がログインしているユーザーのものならば
         if($post->user->id === \Auth::id()){
             // validation
@@ -176,7 +170,6 @@ class PostsController extends Controller
         }else{
             return redirect('/top');
         }
-        
     }
 
     /**
@@ -187,8 +180,7 @@ class PostsController extends Controller
      */
     public function destroy(Post $post)
     {
-        
-    // 注目している投稿がログインしているユーザーのものならば
+        // 注目している投稿がログインしているユーザーのものならば
         if($post->user->id === \Auth::id()){
             // データベースから削除
             $post->delete();
@@ -197,6 +189,5 @@ class PostsController extends Controller
         }else{
             return redirect('/top');
         }
-    
     }
 }

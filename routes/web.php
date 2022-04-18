@@ -10,7 +10,6 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 // 一般ユーザー
 Route::group(['middleware' => ['guest']], function () {
     
@@ -46,7 +45,7 @@ Route::group(['middleware' => ['auth']], function () {
     // ネスト
     Route::group(['prefix' => 'posts/{id}'], function () {
         // 投稿に対するコメント
-        Route::post('comment', 'CommentsController@store')->name('post.comment');
+        Route::post('comment', 'CommentsController@store')->name('comments.store');
     });
-    
+
 });
