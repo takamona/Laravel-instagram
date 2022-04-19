@@ -1,77 +1,53 @@
 @extends('layouts.app')
-@section('title', '投稿ID: ' . $post->id . 'の詳細')
+@section('title', $user->name . 'さんのマイページ')
 @section('content')
     <div class="text-center">
-        <h1>投稿ID: {{ $post->id }} の詳細</h1>
+        <h1>{{ $user->name }} さんのマイページ</h1>
     </div>
-    <table class="table table-bordered table-striped">
-        <tr>
-            <th>ID</th>
-            <th>名前</th>
-            <th>タイトル</th>
-            <th>内容</th>
-            <th>画像</th>
-            <th>投稿日時</th>
-        </tr>
-        <tr>
-            <td>{{ $post->id }}</td>
-            <td>{{ $post->user->name }}</td>
-            <td>{{ $post->title }}</td>
-            <td>{{ $post->content }}</td>
-            <td><img src="{{ asset('uploads')}}/{{$post->image}}" alt="{{ $post->image }}"></td>
-            <td>{{ $post->created_at }}</td>
-        </tr>
-    </table>
-
-    @if($post->user->id === Auth::id())
-    <div class="row mt-3">
-        {!! link_to_route('posts.edit', '編集' , ['id' => $post->id ],['class' => 'btn btn-primary col-sm-6']) !!}
-        
-        {!! Form::open(['route' => ['posts.destroy', 'id' => $post->id ], 'method' => 'DELETE', 'class' => 'col-sm-6']) !!}
-            {!! Form::submit('削除', ['class' => 'btn btn-danger btn-block col-sm-12']) !!}
-        {!! Form::close() !!}
-
+    @if($profile)
+    <div class="row mt-5">
+        <div class="offset-sm-2 col-sm-3">
+            <img src="{{ asset('uploads')}}/{{ $profile->image }}" alt="no image" class="image_icon">
+        </div>
+        <div class="offset-sm-1 col-sm-3 pt-3">
+            <p>ニックネーム / {{ $profile->nickname }}</p>
+            <p>性別 / {{ $profile->gender === 'man' ? '男性' : '女性' }}</p>
+            <p>自己紹介 / {{ $profile->introduction }}</p>
+        </div>
+    </div>
+    @else
+    <div class="row mt-5">
+        <p class="col-sm-12 text-center">プロフィールは未設定です</p>
     </div>
     @endif
     
+    @if(count($posts) !== 0)
     <div class="text-center mt-5">
-        <h2>コメント一覧</h2>
+        <h2>{{ $user->name }} さんの投稿一覧</h2>
     </div>
-    <div class="row">
-        <div class="col-sm-6 offset-sm-3">
-
-            {!! Form::open(['route' => ['comments.store', 'id' => $post->id ]]) !!}
-                <div class="form-group">
-                    {!! Form::label('content', 'コメント') !!}
-                    {!! Form::text('content', old('content'), ['class' => 'form-control']) !!}
-                </div>
-                {!! Form::submit('コメント投稿', ['class' => 'btn btn-primary btn-block']) !!}
-            {!! Form::close() !!}
-        </div>
+     <div class="row mt-3">
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>ID</th>
+                <th>名前</th>
+                <th>タイトル</th>
+                <th>内容</th>
+                <th>投稿日時</th>
+            </tr>
+            @foreach($posts as $post)
+            <tr>
+                <td>{!! link_to_route('posts.show', $post->id , ['id' => $post->id ],[]) !!}</td>
+                <td>{{ $post->user->name }}</td>
+                <td>{{ $post->title }}</td>
+                <td>{{ $post->content }}</td>
+                <td>{{ $post->created_at }}</td>
+            </tr>
+            @endforeach
+        </table>
     </div>
-    @if(count($comments) !== 0)
-    <table class="table table-bordered table-striped mt-3">
-        <tr>
-            <th>ID</th>
-            <th>名前</th>
-            <th>コメント内容</th>
-            <th>投稿日時</th>
-        </tr>
-        @foreach($comments as $comment)
-        <tr>
-            <td>{{ $comment->id }}</td>
-            <td>{{ $comment->user->name }}</td>
-            <td>{{ $comment->content }}</td>
-            <td>{{ $comment->created_at }}</td>
-        </tr>
-        @endforeach
-    </table>
     @else
     <div class="row mt-5">
-        <div class="col-sm-12 text-center">
-            コメントはまだありません。
-        </div>
+        <p class="col-sm-12 text-center">{{ $user->name }} さんの投稿はまだありません</p>
     </div>
-    @endif;
-
+    @endif
 @endsection
