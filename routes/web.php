@@ -9,7 +9,13 @@
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
+
 */
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
 // 一般ユーザー
 Route::group(['middleware' => ['guest']], function () {
     
@@ -42,10 +48,18 @@ Route::group(['middleware' => ['auth']], function () {
     // 画像投稿関係
     Route::resource('posts', 'PostsController');
     
+    // タイムライン関係
+    Route::get('timelines', 'UsersController@timelines')->name('users.timelines');
+    
     // ネスト
     Route::group(['prefix' => 'users/{id}'], function () {
         // いいねした投稿一覧
         Route::get('favorites', 'UsersController@favorites')->name('users.favorites');
+        // フォロー・アンフォロー関係
+        Route::post('follow', 'UserFollowController@store')->name('user.follow');
+        Route::delete('unfollow', 'UserFollowController@destroy')->name('user.unfollow');
+        Route::get('followings', 'UsersController@followings')->name('users.followings');
+        Route::get('followers', 'UsersController@followers')->name('users.followers');
     });
     
     Route::group(['prefix' => 'posts/{id}'], function () {
